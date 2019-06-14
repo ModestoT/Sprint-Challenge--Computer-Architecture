@@ -117,7 +117,7 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
     case ALU_MOD:
       cpu->registers[regA] = cpu->registers[regA] / cpu->registers[regB];
       break;
-      
+
     default:
       printf("Unknown instruction %02x at address %02x\n", op, cpu->pc);
       exit(1);
@@ -128,12 +128,12 @@ void stack_push(struct cpu *cpu, unsigned char val){
   // decrement the Stack Pointer 
   cpu->registers[SP]--;
   // Copy the value in the given register to the address pointed to by SP
-  cpu->ram[cpu->registers[SP]] = val;
+  cpu_ram_write(cpu, cpu->registers[SP], val);
 }
 
 unsigned char stack_pop(struct cpu *cpu, unsigned char reg){
   // Copy the value from the address pointed to by SP to the given register.
-  unsigned char popped = cpu->ram[cpu->registers[SP]];
+  unsigned char popped = cpu_ram_read(cpu, cpu->registers[SP]);
   cpu->registers[reg] = popped;
   // Increment SP.
   cpu->registers[SP]++;
@@ -205,11 +205,11 @@ void cpu_run(struct cpu *cpu)
         break;
 
       case LD:
-        cpu->registers[operandA] = cpu->ram[cpu->registers[operandB]];
+        cpu->registers[operandA] = cpu_ram_read(cpu, cpu->registers[operandB]);
         break;
 
       case PRA:
-        printf("%c",cpu->registers[operandA]);
+        printf("%c", cpu->registers[operandA]);
         break;
       
       case INC:
