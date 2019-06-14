@@ -93,7 +93,15 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
     case ALU_AND:
       cpu->registers[regA] = (cpu->registers[regA] & cpu->registers[regB]);
       break;
-      
+
+    case ALU_OR:
+      cpu->registers[regA] = (cpu->registers[regA] | cpu->registers[regB]);
+      break; 
+
+    case ALU_XOR:
+      cpu->registers[regA] = (cpu->registers[regA] ^ cpu->registers[regB]);
+      break;
+
     default:
       printf("Unknown instruction %02x at address %02x\n", op, cpu->pc);
       exit(1);
@@ -202,6 +210,14 @@ void cpu_run(struct cpu *cpu)
 
       case AND:
         alu(cpu, ALU_AND, operandA, operandB);
+        break;
+
+      case OR:
+        alu(cpu, ALU_OR, operandA, operandB);
+        break;
+
+      case XOR:
+        alu(cpu, ALU_XOR, operandA, operandB);
         break;
 
       // LDI instruction, Saves a value to the provided register index
