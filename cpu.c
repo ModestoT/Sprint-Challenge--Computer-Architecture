@@ -183,6 +183,10 @@ void cpu_run(struct cpu *cpu)
     switch (ir) {
       // 5. Do whatever the instruction should do according to the spec.
 
+      case ST:
+        cpu_ram_write(cpu, cpu->registers[operandA], cpu->registers[operandB]);
+        break;
+        
       case CMP:
         alu(cpu, ALU_CMP, operandA, operandB);
         break;
