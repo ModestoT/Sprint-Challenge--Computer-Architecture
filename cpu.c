@@ -71,15 +71,15 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
         // printf("Equal to\n");
         // turn on the one bit for this comparison, and turn the others off
         cpu->flag = (cpu->flag | 0b00000001);
-        // cpu->flag = (cpu->flag & 0b00000001);
+        cpu->flag = (cpu->flag & 0b00000001);
       } else if (cpu->registers[regA] < cpu->registers[regB]){
         // printf("Less than\n");
         cpu->flag = (cpu->flag | 0b00000100);
-        // cpu->flag = (cpu->flag & 0b00000100);
+        cpu->flag = (cpu->flag & 0b00000100);
       } else {
         // printf("Greater than\n");
         cpu->flag = (cpu->flag | 0b00000010);
-        // cpu->flag = (cpu->flag & 0b00000010);
+        cpu->flag = (cpu->flag & 0b00000010);
       }
       break;
     
@@ -169,7 +169,7 @@ void cpu_run(struct cpu *cpu)
         break;
       
       case JNE:
-        if ( (cpu->flag) & 0b00000001){
+        if ( !((cpu->flag) & 0b00000001)){
           cpu->pc = cpu->registers[operandA];
         } else {
           cpu->pc += num_operands;
