@@ -45,6 +45,7 @@ enum alu_op {
 #define INC  0b01100101
 #define DEC  0b01100110
 #define JMP  0b01010100
+#define JNE  0b01010110
 // Function declarations
 
 extern void cpu_load(struct cpu *cpu, char *filename);
