@@ -69,7 +69,7 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
       // 00000LGE
       if (cpu->registers[regA] == cpu->registers[regB]){
         // printf("Equal to\n");
-        // turn on the one bit for this comparison, and turn the others off
+        // turn on the one bit for this comparison otherwise turn it off
         cpu->flag = (cpu->flag | 0b00000001);
         cpu->flag = (cpu->flag & 0b00000001);
       } else if (cpu->registers[regA] < cpu->registers[regB]){
@@ -90,6 +90,10 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
       cpu->registers[regA]--;
       break;
 
+    case ALU_AND:
+      cpu->registers[regA] = (cpu->registers[regA] & cpu->registers[regB]);
+      break;
+      
     default:
       printf("Unknown instruction %02x at address %02x\n", op, cpu->pc);
       exit(1);
@@ -169,12 +173,13 @@ void cpu_run(struct cpu *cpu)
         break;
       
       case JNE:
-        if ( !((cpu->flag) & 0b00000001)){
+        if ( !((cpu->flag) & 0b00000001) ){
           cpu->pc = cpu->registers[operandA];
         } else {
           cpu->pc += num_operands;
         }
         break;
+
       case LD:
         cpu->registers[operandA] = cpu->ram[cpu->registers[operandB]];
         break;
@@ -193,6 +198,10 @@ void cpu_run(struct cpu *cpu)
       
       case JMP:
         cpu->pc = cpu->registers[operandA];
+        break;
+
+      case AND:
+        alu(cpu, ALU_AND, operandA, operandB);
         break;
 
       // LDI instruction, Saves a value to the provided register index

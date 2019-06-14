@@ -20,7 +20,8 @@ enum alu_op {
   ALU_ADD,
   ALU_CMP,
   ALU_INC,
-  ALU_DEC
+  ALU_DEC,
+  ALU_AND
 };
 
 // Instructions
@@ -46,6 +47,7 @@ enum alu_op {
 #define DEC  0b01100110
 #define JMP  0b01010100
 #define JNE  0b01010110
+#define AND  0b10101000
 // Function declarations
 
 extern void cpu_load(struct cpu *cpu, char *filename);
