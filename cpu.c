@@ -62,7 +62,7 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
     case ALU_ADDI:
       cpu->registers[regA] = cpu->registers[regA] + regB;
       break;
-      
+
     case ALU_MUL:
       // TODO
       cpu->registers[regA] = cpu->registers[regA] * cpu->registers[regB];
@@ -191,6 +191,7 @@ void cpu_run(struct cpu *cpu)
     //   maskedInterrupts = cpu->registers[IM] & cpu->registers[IS];
     //   break;
     // }
+
     // TODO
     // printf("flag:%02X\n", (cpu->flag | 0b00000100 ));
     // 1. Get the value of the current instruction (in address PC).
@@ -212,6 +213,7 @@ void cpu_run(struct cpu *cpu)
       case ADDI:
         alu(cpu, ALU_ADDI, operandA, operandB);
         break;
+        
       case ST:
         cpu_ram_write(cpu, cpu->registers[operandA], cpu->registers[operandB]);
         break;
