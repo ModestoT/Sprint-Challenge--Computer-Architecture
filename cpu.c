@@ -2,9 +2,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #define DATA_LEN 1024
 #define SP 7  // Stack pointer index value
+#define IM 5  // interrupt mask index in the register
+#define IS 6  // interrupt status index in the register
+
 /**
  * Load the binary bytes from a .ls8 source file into a RAM array
  */
@@ -55,6 +59,10 @@ void cpu_ram_write(struct cpu *cpu, int index, int value)
 void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB)
 {
   switch (op) {
+    case ALU_ADDI:
+      cpu->registers[regA] = cpu->registers[regA] + regB;
+      break;
+      
     case ALU_MUL:
       // TODO
       cpu->registers[regA] = cpu->registers[regA] * cpu->registers[regB];
@@ -163,8 +171,26 @@ unsigned char stack_pop(struct cpu *cpu, unsigned char reg){
 void cpu_run(struct cpu *cpu)
 {
   int running = 1; // True until we get a HLT instruction
-
+  unsigned char maskedInterrupts;
+  struct timeval tv; // struct used to hold the amount of time elasped
+  time_t time; // variable used to hold to the time that has elasped and used to compare to the structs time
+  
   while (running) {
+    // gettimeofday(&tv, NULL);
+    // // checks if the struct time is the same as the variable time, if they are different 1 sec has elasped
+    // if (time != 0 && tv.tv_sec != time){
+    //   // printf("Time of day: %ld\n", time);
+    //   cpu->registers[IS] = 1;
+    // }
+
+    // time = tv.tv_sec;
+
+    // // check to see if interupts are enabled
+    // if (cpu->registers[IS] == 1){
+    //   printf("interrupts enabled\n");
+    //   maskedInterrupts = cpu->registers[IM] & cpu->registers[IS];
+    //   break;
+    // }
     // TODO
     // printf("flag:%02X\n", (cpu->flag | 0b00000100 ));
     // 1. Get the value of the current instruction (in address PC).
@@ -183,10 +209,13 @@ void cpu_run(struct cpu *cpu)
     switch (ir) {
       // 5. Do whatever the instruction should do according to the spec.
 
+      case ADDI:
+        alu(cpu, ALU_ADDI, operandA, operandB);
+        break;
       case ST:
         cpu_ram_write(cpu, cpu->registers[operandA], cpu->registers[operandB]);
         break;
-        
+
       case CMP:
         alu(cpu, ALU_CMP, operandA, operandB);
         break;

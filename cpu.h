@@ -11,6 +11,8 @@ struct cpu {
   unsigned char registers[8];
   // ram (array)
   unsigned char ram[256];
+  // interrupts
+  unsigned char interrupts[8];
 };
 
 // ALU operations
@@ -27,7 +29,8 @@ enum alu_op {
   ALU_NOT,
   ALU_SHL,
   ALU_SHR,
-  ALU_MOD
+  ALU_MOD,
+  ALU_ADDI
 };
 
 // Instructions
@@ -61,6 +64,8 @@ enum alu_op {
 #define SHR  0b10101101
 #define MOD  0b10100100
 #define ST   0b10000100
+#define ADDI 0b10000110
+
 // Function declarations
 
 extern void cpu_load(struct cpu *cpu, char *filename);
